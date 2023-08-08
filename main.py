@@ -1,12 +1,13 @@
-from auto_black_box_test.black_box_test import black_box_test, draw_test, music_test, face_test
+from auto_black_box_test.black_box_test import black_box_test
+from auto_black_box_test.draw import draw_test
+from auto_black_box_test.face import face_test
+from auto_black_box_test.music import music_test
 from conf.conf import load_config
 from driver_preparation.download import download_browser_driver
 
-web_driver = None
-
 
 def menu(configs):
-    global web_driver
+    web_driver = None
     is_init = False
     while True:
         print('1.下载浏览器驱动')
@@ -16,8 +17,9 @@ def menu(configs):
         if operate_code == '1':
             download_browser_driver(configs)
         elif operate_code == '2':
+            target_url = configs.get('base', 'remote_url')
             if not is_init:
-                driver = black_box_test(configs)
+                driver = black_box_test(target_url, configs)
                 web_driver = driver
                 is_init = True
 
@@ -28,15 +30,15 @@ def menu(configs):
             operate_code = input('请输入：')
 
             if operate_code == '1':
-                face_test(web_driver)
-                draw_test(web_driver)
-                music_test(web_driver)
+                face_test(target_url, web_driver)
+                draw_test(target_url, web_driver)
+                music_test(target_url, web_driver)
             elif operate_code == '2':
-                face_test(web_driver)
+                face_test(target_url, web_driver)
             elif operate_code == '3':
-                draw_test(web_driver)
+                draw_test(target_url, web_driver)
             elif operate_code == '4':
-                music_test(web_driver)
+                music_test(target_url, web_driver)
         elif operate_code == '3':
             print('退出')
             if web_driver is not None:
