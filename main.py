@@ -1,0 +1,57 @@
+from auto_black_box_test.black_box_test import black_box_test, draw_test, music_test, face_test
+from conf.conf import load_config
+from driver_preparation.download import download_browser_driver
+
+web_driver = None
+
+
+def menu(configs):
+    global web_driver
+    is_init = False
+    while True:
+        print('1.下载浏览器驱动')
+        print('2.开始测试')
+        print('3.退出')
+        operate_code = input('请输入：')
+        if operate_code == '1':
+            download_browser_driver(configs)
+        elif operate_code == '2':
+            if not is_init:
+                driver = black_box_test(configs)
+                web_driver = driver
+                is_init = True
+
+            print('1.全部测试')
+            print('2.人脸风格化测试')
+            print('3.画图测试')
+            print('4.音乐测试')
+            operate_code = input('请输入：')
+
+            if operate_code == '1':
+                face_test(web_driver)
+                draw_test(web_driver)
+                music_test(web_driver)
+            elif operate_code == '2':
+                face_test(web_driver)
+            elif operate_code == '3':
+                draw_test(web_driver)
+            elif operate_code == '4':
+                music_test(web_driver)
+        elif operate_code == '3':
+            print('退出')
+            if web_driver is not None:
+                web_driver.close()
+            break
+
+        else:
+            print('输入错误，请重新输入')
+
+
+def main():
+    configs = load_config()
+    menu(configs)
+    exit(1)
+
+
+if __name__ == '__main__':
+    main()
